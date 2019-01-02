@@ -1,0 +1,463 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Handling flaky tests · Loki</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    
+        <link rel="stylesheet" href="gitbook/style.css">
+    
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="website-1546468000650.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    
+        <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    
+    
+    
+
+    
+    
+    <link rel="prev" href="continuous-integration.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+    <div class="book-logo">
+        
+        <a href="https://github.com/oblador/loki/">
+        
+        
+        <img src="logo.svg"/>
+        
+        
+        </a>
+        
+    </div>
+    
+    
+        <nav role="navigation">
+        
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        
+        <li class="chapter 
+              "
+            data-level="1.1" 
+            data-path="./">
+
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+              "
+            data-level="1.2" 
+            data-path="getting-started.html">
+
+            
+                <a href="getting-started.html">
+            
+                    
+                    Getting started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+              "
+            data-level="1.3" 
+            data-path="configuration.html">
+
+            
+                <a href="configuration.html">
+            
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+              "
+            data-level="1.4" 
+            data-path="command-line-arguments.html">
+
+            
+                <a href="command-line-arguments.html">
+            
+                    
+                    Command line arguments
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+                
+    
+        
+        <li class="chapter 
+               hide "
+            data-level="1.4.1" 
+            data-path="command-line-arguments.html">
+
+            
+                <a href="command-line-arguments.html#loki-test">
+            
+                    
+                    loki test
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+               hide "
+            data-level="1.4.2" 
+            data-path="command-line-arguments.html">
+
+            
+                <a href="command-line-arguments.html#loki-update">
+            
+                    
+                    loki update
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+               hide "
+            data-level="1.4.3" 
+            data-path="command-line-arguments.html">
+
+            
+                <a href="command-line-arguments.html#loki-approve">
+            
+                    
+                    loki approve
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+               hide "
+            data-level="1.4.4" 
+            data-path="command-line-arguments.html">
+
+            
+                <a href="command-line-arguments.html#loki-init">
+            
+                    
+                    loki init
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        
+        <li class="chapter 
+              "
+            data-level="1.5" 
+            data-path="continuous-integration.html">
+
+            
+                <a href="continuous-integration.html">
+            
+                    
+                    Continuous integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        
+        <li class="chapter 
+            active  selected  "
+            data-level="1.6" 
+            data-path="flaky-tests.html">
+
+            
+                <a href="flaky-tests.html">
+            
+                    
+                    Handling flaky tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+</ul>
+
+
+        </nav>
+    
+
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Handling flaky tests</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="handling-flaky-tests">Handling Flaky Tests</h1>
+<h2 id="skipping-tests">Skipping Tests</h2>
+<p>In some cases having a story of a component is useful for development purposes, but might be acceptable not to be covered by visual regression tests such as an animated GIF that cannot accurately be covered with a single screenshot. In those cases you can opt out by using <code>add.skip()</code>: </p>
+<pre class="language-"><code class="lang-js"><span class="token function">storiesOf</span><span class="token punctuation">(</span><span class="token string">&apos;MyComponent&apos;</span><span class="token punctuation">,</span> module<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">&apos;enabled story&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token operator">&lt;</span>MyComponent <span class="token operator">/</span><span class="token operator">&gt;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">lokiSkip</span><span class="token punctuation">(</span><span class="token string">&apos;skipped story&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token operator">&lt;</span>MyComponent <span class="token operator">/</span><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="asynchronous-stories">Asynchronous Stories</h2>
+<p>Some components will do some computing or loading data over the network and then re-render. This can cause flaky tests and incorrect screenshots. Loki handles most cases of network traffic and loading images, but for other cases you can mark your story as async and tell loki when you&apos;re done via the <code>context.done</code> function:</p>
+<pre class="language-"><code class="lang-js"><span class="token function">storiesOf</span><span class="token punctuation">(</span><span class="token string">&apos;MyComponent&apos;</span><span class="token punctuation">,</span> module<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">&apos;synchronous story&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token operator">&lt;</span>MyComponent <span class="token operator">/</span><span class="token operator">&gt;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">lokiAsync</span><span class="token punctuation">(</span><span class="token string">&apos;asynchronous story&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> done <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token operator">&lt;</span>MyComponent onDone<span class="token operator">=</span><span class="token punctuation">{</span>done<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="transitions-and-animations">Transitions and Animations</h2>
+<p>Animations cause the your component to be highly time sensitive and unless conditions are <em>exactly</em> the same for each test instance they will yield different screenshots. Loki takes care of the most common web transitions out of the box by disabling CSS transitions/animations and <code>requestAnimationFrame</code>. The screenshot will be paused at the end state of the transition. To disable this use the <code>chromeEnableAnimations</code> option.</p>
+<p>However known limitations include: </p>
+<ul>
+<li>Looped <code>requestAnimationFrame</code> animations</li>
+<li>GIFs</li>
+<li>SVG animations</li>
+<li>Native Lottie animations</li>
+<li>React Native <code>Animated</code> library</li>
+</ul>
+<p>It&apos;s up to you to disable these kind of animations. A simple way would be to use context with <a href="https://github.com/acdlite/recompose" target="_blank"><code>recompose</code></a>:</p>
+<pre class="language-"><code class="lang-js"><span class="token comment">// .storybook/config.js or storybook/storybook.js</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> addDecorator <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;@storybook/react&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> Children <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> withContext <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;recompose&apos;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> DisabledAnimationsProvider <span class="token operator">=</span> <span class="token function">withContext</span><span class="token punctuation">(</span>
+  <span class="token punctuation">{</span> disableAnimations<span class="token punctuation">:</span> PropTypes<span class="token punctuation">.</span>bool <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> disableAnimations<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">{</span> children <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> Children<span class="token punctuation">.</span><span class="token function">only</span><span class="token punctuation">(</span>children<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">withDisabledAnimations</span> <span class="token operator">=</span> getStory <span class="token operator">=&gt;</span>
+  <span class="token operator">&lt;</span>DisabledAnimationsProvider<span class="token operator">&gt;</span><span class="token punctuation">{</span><span class="token function">getStory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>DisabledAnimationsProvider<span class="token operator">&gt;</span><span class="token punctuation">;</span>
+
+<span class="token function">addDecorator</span><span class="token punctuation">(</span>withDisabledAnimations<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// MyComponent.js</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> getContext <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;recompose&apos;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">MyComponent</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> disableAnimations <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span>
+  disableAnimations 
+  <span class="token operator">?</span> <span class="token comment">/* Something without animations */</span>
+  <span class="token punctuation">:</span> <span class="token comment">/* Something with animations */</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  disableAnimations<span class="token punctuation">:</span> PropTypes<span class="token punctuation">.</span>bool<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span>MyComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="continuous-integration.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Continuous integration">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Handling flaky tests","level":"1.6","depth":1,"previous":{"title":"Continuous integration","level":"1.5","depth":1,"path":"continuous-integration.md","ref":"continuous-integration.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-gestalt","-theme-default","prism","-highlight","anchorjs","github","styles-sass-fix"],"root":"docs","styles":{"website":"website-1546468000650.css"},"pluginsConfig":{"prism":{},"styles-sass-fix":{},"github":{"url":"https://github.com/oblador/loki/"},"theme-gestalt":{"showLevel":false,"styles":{"website":"styles/website.css"},"logo":"logo.svg","favicon":"favicon.png","excludeDefaultStyles":false},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/oblador/loki/tree/master"},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loki","gitbook":"3.2.2"},"file":{"path":"flaky-tests.md","mtime":"2019-01-02T22:21:02.271Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2019-01-02T22:26:39.285Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
